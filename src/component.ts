@@ -77,7 +77,7 @@ export class Component<T=any, E=any> {
       el['_component'] = this;
     }
     this.render(el, html);
-    if (this.rendered) (this.rendered(this.state));
+    if (this.rendered) (this.rendered.call( this, this.state) );
   }
 
   public setState(state: T, options: EventOptions
