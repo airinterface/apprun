@@ -21,6 +21,7 @@ export class Component<T=any, E=any> {
   private global_event;
   public element;
   public rendered;
+  public beforeUnload;
   public mounted;
   public unload;
   private tracking_id;
@@ -65,6 +66,7 @@ export class Component<T=any, E=any> {
         const observer = new MutationObserver(changes => {
           const { removedNodes, oldValue } = changes[0];
           if (oldValue === this.tracking_id || Array.from(removedNodes).indexOf(el) >=0){
+            if( this.beforeUnload ) this.beforeUnload.call(this);
             this.unload();
             observer.disconnect();
           }
@@ -77,7 +79,7 @@ export class Component<T=any, E=any> {
       el['_component'] = this;
     }
     this.render(el, html);
-    if (this.rendered) (this.rendered(this.state));
+    if (this.rendered) (this.rendered.call(this, this.state));
   }
 
   public setState(state: T, options: EventOptions
